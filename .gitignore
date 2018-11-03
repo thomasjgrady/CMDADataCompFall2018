@@ -1,0 +1,17 @@
+# Glob files
+*.pyc
+*.zip
+*.o
+*.obj
+*.swp
+*.~m
+
+# Specific files
+HADS_doc.pdf
+thads2011.txt
+
+# Directories
+bin/
+data/
+.idea/
+venv/
