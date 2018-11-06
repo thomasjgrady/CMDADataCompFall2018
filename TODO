@@ -1,0 +1,4 @@
+[ ] Properly process data when reading from file to remove quotes
+[ ] Run keras model
+[ ] Plot results on map of US
+[ ] Explore options for other data visualitzations
