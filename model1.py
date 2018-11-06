@@ -4,6 +4,7 @@ import numpy as np
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
+from keras.utils import plot_model
 
 data_filename = "data/thads2011.txt"
 
@@ -88,3 +89,6 @@ score = model.evaluate(x_test, y_test)
 
 # Save the model
 model.save("models/model1.h5")
+
+# Plot the model
+plot_model(model, to_file="images/model1.png")
