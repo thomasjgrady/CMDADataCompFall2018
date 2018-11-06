@@ -15,3 +15,4 @@ bin/
 data/
 .idea/
 venv/
+models/
