@@ -17,3 +17,6 @@ data/
 venv/
 models/
 images/
+node_modules/
+
+port.txt
