@@ -19,4 +19,4 @@ models/
 images/
 node_modules/
 
-port.txt
+server/port.txt
