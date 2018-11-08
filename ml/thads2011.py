@@ -70,24 +70,24 @@ def create_datasets(train_size, test_size, fields_dict):
 
             for k, field in enumerate(output_fields):
                 y_test[i,k] = float(line[fields_dict[field]].strip("\'"))
-    
+
+    x_all = np.concatenate((x_train, x_test))
+    y_all = np.concatenate((y_train, y_test))
+
     # Get the infinity norm of each created dataset
-    x_train_norm = x_train.max(axis=0)
-    y_train_norm = y_train.max(axis=0)
-    x_test_norm = x_test.max(axis=0)
-    y_test_norm = y_test.max(axis=0)
-    
+    x_norm = x_all.max(axis=0)
+    y_norm = y_all.max(axis=0)
+
     with open("data/maxes.txt", "w") as maxes:
-        maxes.write(str(x_train_norm))
-        maxes.write(str(y_train_norm))
-        maxes.write(str(x_test_norm))
-        maxes.write(str(y_test_norm))
+        maxes.write(str(x_norm.tolist()))
+        maxes.write('\n')
+        maxes.write(str(y_norm.tolist()))
 
     # Normalize each dataset
-    x_train_normalized = x_train/x_train_norm
-    y_train_normalized = y_train/y_train_norm
-    x_test_normalized = x_test/x_test_norm
-    y_test_normalized = y_test/y_test_norm
+    x_train_normalized = x_train/x_norm
+    y_train_normalized = y_train/y_norm
+    x_test_normalized = x_test/x_norm
+    y_test_normalized = y_test/y_norm
 
     return (x_train, x_test, y_train, y_test, x_train_normalized, y_train_normalized, x_test_normalized,
             y_test_normalized)

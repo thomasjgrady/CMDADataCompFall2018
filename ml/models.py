@@ -1,4 +1,6 @@
 import numpy as np
+import random
+import time
 
 from thads2011 import *
 from keras.models import Sequential
@@ -7,18 +9,21 @@ from keras.optimizers import SGD
 
 def create_model():
     model = Sequential()
-    model.add(Dense(num_input_fields*2, activation="relu", input_dim=num_input_fields))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_input_fields, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(Dense(num_input_fields//2, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(Dense(4, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(Dense(2, activation="relu"))
-    model.add(Dropout(0.5))
-    model.add(Dense(2, activation="relu"))
-    model.add(Dropout(0.5))
+    model.add(Dense(5, activation="relu", input_dim=num_input_fields))
+    model.add(Dense(5, activation="relu"))
+
+    # model.add(Dense(num_input_fields*2, activation="relu", input_dim=num_input_fields))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(num_input_fields, activation="relu"))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(num_input_fields//2, activation="relu"))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(4, activation="relu"))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(2, activation="relu"))
+    # model.add(Dropout(0.5))
+    # model.add(Dense(2, activation="relu"))
+    # model.add(Dropout(0.5))
     model.add(Dense(1))
 
     return model
@@ -29,7 +34,10 @@ def create_optimizer(learning_rate, decay, momentum):
 
 def train_model(model, x_train, y_train, epochs, batch_size):
     model.compile(loss="mean_squared_error", optimizer="adam")
+    start = time.time()
     model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
+    end = time.time()
+    print("Model took %0.2f seconds to train" % (end - start))
     
 def test_model(model, x_test, y_test, batch_size):
     score = model.evaluate(x_test, y_test, batch_size=batch_size)
@@ -40,7 +48,7 @@ if __name__ == "__main__":
     train_size = 130000
     test_size = 10000
 
-    epochs = 20
+    epochs = 100
     batch_size = 1000
 
     model = create_model()

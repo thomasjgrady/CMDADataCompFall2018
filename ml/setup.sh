@@ -4,7 +4,7 @@ mkdir data
 mkdir bin
 mkdir models
 
-virtualenv --python=python3.6 venv
+virtualenv --python=python3.4 env
 source venv/bin/activate
 
 pip3 install -r requirements.txt
