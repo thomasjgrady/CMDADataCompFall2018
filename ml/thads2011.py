@@ -5,13 +5,11 @@ import numpy as np
 data_file_path = "data/thads2011.txt"
 
 # Input fields and input fields in human readable format
-input_fields = ["METRO3", "PER", "OWNRENT", "STRUCTURETYPE", "BEDRMS", "REGION"]
-input_fields_h = ["FMTMETRO3", "FMTPER", "FMTOWNRENT", "FMTSTRUCTURETYPE", "FMTBEDRMS", "FMTREGION"]
+input_fields = ["STRUCTURETYPE", "REGION", "BUILT", "BEDRMS", "LMED", "PER"]
 num_input_fields = len(input_fields)
 
 # Output fields and output fields in human readable format
-output_fields = ["BURDEN"]
-output_fields_h = ["BURDEN"]
+output_fields = ["FMR"]
 num_output_fields = len(output_fields)
 
 # Create the dictionary mapping the headers to their indeces within the line
@@ -78,6 +76,12 @@ def create_datasets(train_size, test_size, fields_dict):
     y_train_norm = y_train.max(axis=0)
     x_test_norm = x_test.max(axis=0)
     y_test_norm = y_test.max(axis=0)
+    
+    with open("data/maxes.txt", "w") as maxes:
+        maxes.write(str(x_train_norm))
+        maxes.write(str(y_train_norm))
+        maxes.write(str(x_test_norm))
+        maxes.write(str(y_test_norm))
 
     # Normalize each dataset
     x_train_normalized = x_train/x_train_norm
