@@ -7,6 +7,7 @@ from thads2011 import *
 from keras.models import Sequential
 from keras.layers import Activation, Dense, Dropout
 from keras.optimizers import SGD
+from keras.callbacks import TensorBoard
 
 def create_model():
     model = Sequential()
@@ -34,9 +35,10 @@ def create_optimizer(learning_rate, decay, momentum):
     return sgd
 
 def train_model(model, x_train, y_train, epochs, batch_size):
+    tb_call_back = TensorBoard(log_dir='./models/graphs', histogram_freq=0, write_graph=True, write_images=True)
     model.compile(loss="mean_squared_error", optimizer="adam")
     start = time.time()
-    model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
+    model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[tb_call_back])
     end = time.time()
     print("Model took %0.2f seconds to train" % (end - start))
     
@@ -62,8 +64,8 @@ if __name__ == "__main__":
     
     train_model(model, x_train_normalized, y_train_normalized, epochs, batch_size) 
     score = test_model(model, x_test_normalized, y_test_normalized, batch_size)
-    fname = "{}_{}.txt".format(sys.argv[1], sys.argv[2])
-    with open('data/scores/'+fname, 'w') as f:
+    fname = "{}_{}".format(sys.argv[1], sys.argv[2])
+    with open('data/scores/'+fname+".txt", 'w') as f:
         f.write(str(score))
     print(str(score))
 

@@ -5,7 +5,7 @@ import numpy as np
 data_file_path = "data/thads2011.txt"
 
 # Input fields and input fields in human readable format
-input_fields = ["STRUCTURETYPE", "REGION", "BUILT", "BEDRMS", "LMED", "PER"]
+input_fields = ["REGION", "BUILT", "BEDRMS", "LMED"]
 num_input_fields = len(input_fields)
 
 # Output fields and output fields in human readable format
