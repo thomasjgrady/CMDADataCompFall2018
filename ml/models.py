@@ -12,22 +12,18 @@ from keras.optimizers import SGD
 from keras.callbacks import TensorBoard
 
 def create_model():
-    model = Sequential()
-    model.add(Dense(5, activation="relu", input_dim=num_input_fields))
-    model.add(Dense(5, activation="relu"))
 
-    # model.add(Dense(num_input_fields*2, activation="relu", input_dim=num_input_fields))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(num_input_fields, activation="relu"))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(num_input_fields//2, activation="relu"))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(4, activation="relu"))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(2, activation="relu"))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(2, activation="relu"))
-    # model.add(Dropout(0.5))
+    dropout_rate = 0.75
+
+    model = Sequential()
+    model.add(Dense(10, activation="relu", input_dim=num_input_fields))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(7, activation="relu"))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(5, activation="relu"))
+    model.add(Dropout(dropout_rate))
+    model.add(Dense(3, activation="relu"))
+    model.add(Dropout(dropout_rate))
     model.add(Dense(1))
 
     return model
@@ -36,11 +32,11 @@ def create_optimizer(learning_rate, decay, momentum):
     sgd = SGD(lr=learning_rate, decay=decay, momentum=momentum, nesterov=True)
     return sgd
 
-def train_model(model, x_train, y_train, epochs, batch_size):
+def train_model(model, optimizer, x_train, y_train, epochs, batch_size):
     tb_call_back = TensorBoard(log_dir='./models/graphs', histogram_freq=0, write_graph=True, write_images=True)
-    model.compile(loss="mean_squared_error", optimizer="adam")
+    model.compile(optimizer=optimizer, loss="mean_squared_error")
     start = time.time()
-    hist = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[tb_call_back])
+    hist = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[tb_call_back], verbose=4)
     end = time.time()
     print("Model took %0.2f seconds to train" % (end - start))
 
@@ -60,13 +56,18 @@ if __name__ == "__main__":
     batch_size = int(sys.argv[2])
 
     model = create_model()
-    optimizer = create_optimizer(0.01, 1e-6, 0.9)
+    
+    # Set up SGD optimizer
+    learning_rate = 0.2
+    decay = (learning_rate/epochs)/2
+    optimizer = create_optimizer(learning_rate, decay, 0.9)
+    
+    # Create datasets
     fields_dict = create_fields_dict()
     datasets = create_datasets(train_size, test_size, fields_dict)  
-    
     x_train, x_test, y_train, y_test, x_train_normalized, y_train_normalized, x_test_normalized, y_test_normalized = datasets
     
-    hist = train_model(model, x_train_normalized, y_train_normalized, epochs, batch_size) 
+    hist = train_model(model, optimizer, x_train_normalized, y_train_normalized, epochs, batch_size) 
     score = test_model(model, x_test_normalized, y_test_normalized, batch_size)
     fname = "{}_{}".format(sys.argv[1], sys.argv[2])
     with open('data/scores/'+fname+".txt", 'w') as f:
