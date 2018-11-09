@@ -4,6 +4,8 @@ import time
 import sys
 
 from thads2011 import *
+
+from ann_visualizer.visualize import ann_viz
 from keras.models import Sequential
 from keras.layers import Activation, Dense, Dropout
 from keras.optimizers import SGD
@@ -38,9 +40,11 @@ def train_model(model, x_train, y_train, epochs, batch_size):
     tb_call_back = TensorBoard(log_dir='./models/graphs', histogram_freq=0, write_graph=True, write_images=True)
     model.compile(loss="mean_squared_error", optimizer="adam")
     start = time.time()
-    model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[tb_call_back])
+    hist = model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, callbacks=[tb_call_back])
     end = time.time()
     print("Model took %0.2f seconds to train" % (end - start))
+
+    return hist
     
 def test_model(model, x_test, y_test, batch_size):
     score = model.evaluate(x_test, y_test, batch_size=batch_size)
@@ -62,11 +66,20 @@ if __name__ == "__main__":
     
     x_train, x_test, y_train, y_test, x_train_normalized, y_train_normalized, x_test_normalized, y_test_normalized = datasets
     
-    train_model(model, x_train_normalized, y_train_normalized, epochs, batch_size) 
+    hist = train_model(model, x_train_normalized, y_train_normalized, epochs, batch_size) 
     score = test_model(model, x_test_normalized, y_test_normalized, batch_size)
     fname = "{}_{}".format(sys.argv[1], sys.argv[2])
     with open('data/scores/'+fname+".txt", 'w') as f:
         f.write(str(score))
     print(str(score))
 
+    loss = hist.history['loss']
+    loss_final = loss[len(loss) - 1]
+
+    with open('data/loss/'+fname+'.txt', 'w') as f:
+        f.write(str(loss_final))
+
     model.save("models/{}.h5".format(fname))
+    
+    # img_fname = "images/{}.gv".format(fname)
+    # ann_viz(model, title=fname, filename=img_fname)
