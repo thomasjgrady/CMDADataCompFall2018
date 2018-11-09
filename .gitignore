@@ -15,6 +15,7 @@ bin/
 data/
 .idea/
 venv/
+models/
 images/
 node_modules/
 

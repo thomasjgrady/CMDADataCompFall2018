@@ -2,6 +2,7 @@ import numpy as np
 import random
 import time
 import sys
+import matplotlib.pyplot as plt
 
 from thads2011 import *
 
@@ -16,15 +17,18 @@ def create_model():
     dropout_rate = 0.75
 
     model = Sequential()
-    model.add(Dense(10, activation="relu", input_dim=num_input_fields))
-    model.add(Dropout(dropout_rate))
-    model.add(Dense(7, activation="relu"))
-    model.add(Dropout(dropout_rate))
-    model.add(Dense(5, activation="relu"))
-    model.add(Dropout(dropout_rate))
-    model.add(Dense(3, activation="relu"))
-    model.add(Dropout(dropout_rate))
-    model.add(Dense(1))
+    model.add(Dense(1, activation="linear", input_dim=num_input_fields))
+
+#    model = Sequential()
+#    model.add(Dense(10, activation="relu", input_dim=num_input_fields))
+#    model.add(Dropout(dropout_rate))
+#    model.add(Dense(7, activation="relu"))
+#    model.add(Dropout(dropout_rate))
+#    model.add(Dense(5, activation="relu"))
+#    model.add(Dropout(dropout_rate))
+#    model.add(Dense(3, activation="relu"))
+#    model.add(Dropout(dropout_rate))
+#    model.add(Dense(1))
 
     return model
 
@@ -60,7 +64,7 @@ if __name__ == "__main__":
     # Set up SGD optimizer
     learning_rate = 0.2
     decay = (learning_rate/epochs)/2
-    optimizer = create_optimizer(learning_rate, decay, 0.9)
+    optimizer = create_optimizer(1e-5, 0, 0.9)
     
     # Create datasets
     fields_dict = create_fields_dict()
@@ -81,6 +85,14 @@ if __name__ == "__main__":
         f.write(str(loss_final))
 
     model.save("models/{}.h5".format(fname))
+
+    e = [epoch for epoch in range(epochs)]
+    plt.plot(e, loss)
+    plt.xlabel("Epochs")
+    plt.ylabel("Training Loss")
+    plt.title("Visualization of Learning --- Linear Model")
+    #plt.ylim(0,0.01)
+    plt.show()
     
     # img_fname = "images/{}.gv".format(fname)
     # ann_viz(model, title=fname, filename=img_fname)
