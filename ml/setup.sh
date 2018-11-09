@@ -1,6 +1,7 @@
 #!/bin/bash
 mkdir images
 mkdir data
+mkdir data/scores
 mkdir bin
 mkdir models
 

@@ -9,7 +9,7 @@ input_fields = ["STRUCTURETYPE", "REGION", "BUILT", "BEDRMS", "LMED", "PER"]
 num_input_fields = len(input_fields)
 
 # Output fields and output fields in human readable format
-output_fields = ["FMR"]
+output_fields = ["VALUE"]
 num_output_fields = len(output_fields)
 
 # Create the dictionary mapping the headers to their indeces within the line

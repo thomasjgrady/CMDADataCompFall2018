@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import time
+import sys
 
 from thads2011 import *
 from keras.models import Sequential
@@ -45,11 +46,12 @@ def test_model(model, x_test, y_test, batch_size):
 
 if __name__ == "__main__":
 
-    train_size = 130000
-    test_size = 10000
+    total_size = 145531
+    train_size = int(total_size * 0.8)
+    test_size = int(total_size * 0.2)
 
-    epochs = 100
-    batch_size = 1000
+    epochs = int(sys.argv[1])
+    batch_size = int(sys.argv[2])
 
     model = create_model()
     optimizer = create_optimizer(0.01, 1e-6, 0.9)
@@ -60,6 +62,9 @@ if __name__ == "__main__":
     
     train_model(model, x_train_normalized, y_train_normalized, epochs, batch_size) 
     score = test_model(model, x_test_normalized, y_test_normalized, batch_size)
-    print(score)
+    fname = "{}_{}.txt".format(sys.argv[1], sys.argv[2])
+    with open('data/scores/'+fname, 'w') as f:
+        f.write(str(score))
+    print(str(score))
 
-    model.save("models/model1.h5")
+    model.save("models/{}.h5".format(fname))
